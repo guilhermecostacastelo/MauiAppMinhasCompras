@@ -4,10 +4,10 @@ namespace MauiAppMinhasCompras.Views;
 
 public partial class NewPage1 : ContentPage
 {
-	public NewPage1()
-	{
-		InitializeComponent();
-	}
+    public NewPage1()
+    {
+        InitializeComponent();
+    }
 
     private async void ToolbarItem_Clicked(object sender, EventArgs e)
     {
