@@ -82,7 +82,7 @@ public partial class ListaProduto : ContentPage
 
             bool confirm = await DisplayAlert("Tem Certeza?", $"Remover {p.Descricao}?", "Sim", "Não");
 
-            if(confirm)
+            if (confirm)
             {
                 await App.Db.Delete(p.Id);
                 lista.Remove(p);
@@ -125,9 +125,56 @@ public partial class ListaProduto : ContentPage
         {
             await DisplayAlert("Ops", ex.Message, "OK");
         }
-        finally 
+        finally
         {
-            lst_produtos.IsRefreshing = false;   
-        }    
+            lst_produtos.IsRefreshing = false;
+        }
+    }
+
+    private async void SearchBar_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        try
+        {
+            string categoria = e.NewTextValue;
+
+            lista.Clear();
+
+            List<Produto> tmp = await App.Db.SearchByCategoria(categoria);
+
+            tmp.ForEach(i => lista.Add(i));
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Ops", ex.Message, "OK");
+        }
+    }
+
+    private async void ToolbarItem_Clicked_2(object sender, EventArgs e)
+    {
+        try
+        {
+            var grupos = lista
+                .GroupBy(i => i.Categoria)
+                .Select(g => new
+                {
+                    Categoria = g.Key,
+                    Total = g.Sum(p => p.Total)
+                })
+                .ToList();
+
+            string msg = "";
+
+            foreach (var item in grupos)
+            {
+                msg += $"{item.Categoria}: {item.Total:C}\n";
+            }
+
+            await DisplayAlert("Relatório por Categoria", msg, "OK");
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Ops", ex.Message, "OK");
+        }
+
     }
 }

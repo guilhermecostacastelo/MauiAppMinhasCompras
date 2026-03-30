@@ -4,6 +4,6 @@ namespace MauiAppMinhasCompras.Views
 {
     internal class EditarProduto : Page
     {
-        public Produto BindingContext { get; set; }
+        public required Produto BindingContext { get; set; }
     }
 }
